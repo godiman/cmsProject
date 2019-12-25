@@ -7,6 +7,7 @@ The database use in this project is MSQL database.
 
 For better experience with this project, you have to install XAMPP (Local server) in your machine.
 There are five tables in this project with the following names:
+
 Database Name: project
 
 Table Name: 
