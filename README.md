@@ -9,9 +9,19 @@ For better experience with this project, you have to install XAMPP (Local server
 There are five tables in this project with the following names:
 Database Name: project
 
-Table Name: admin_reg, files, images,post, videos.
+Table Name: 
 
-Column names: 1. admin_reg => admin_id, Date_created, password,username
+admin_reg, 
+
+files, 
+
+images,post, 
+
+videos.
+
+Column names: 
+
+1. admin_reg => admin_id, Date_created, password,username
 
 2. files => file_id, admin_id, file_content, file_name
 
