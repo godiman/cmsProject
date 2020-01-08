@@ -1,6 +1,7 @@
 
 <?php 
   session_start();
+  include ("../script/connection.php");
   $admin = $_SESSION['username'];
   if (!$admin) {
     header("location:admin_login.php");
@@ -16,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Simple Sidebar - Start Bootstrap Template</title>
+  <title>CMS Project</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -52,11 +53,11 @@
       <div class="sidebar-heading" style="background-color: #0097a7"><?php echo $admin; ?> </div>
       <div class="list-group list-group-flush">
         
-        <a href="#conn" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="dash" class="list-group-item list-group-item-action bg-secondary">Dashboard</a>
-        <a href="#conn" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="post"  class="list-group-item list-group-item-action bg-secondary">Add New Post</a>
+        <a href="#" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="dash" class="list-group-item list-group-item-action bg-secondary">Dashboard</a>
+        <a href="post.php" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="post"  class="list-group-item list-group-item-action bg-secondary">Add New Post</a>
         <a href="#" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="cat" class="list-group-item list-group-item-action bg-secondary">Categories</a>
 
-        <a type="button" target=".container-fluid" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="admin" class="list-group-item list-group-item-action bg-secondary">Manage Admin</a>
+        <a href="register_admin.php" type="button" target=".container-fluid" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="admin" class="list-group-item list-group-item-action bg-secondary">Manage Admin</a>
 
         <a href="#" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="comment" class="list-group-item list-group-item-action bg-secondary">Comments</a>
         <a href="#" onMouseOver="this.style.color='red'" onMouseOut="this.style.color= '#fff'" id="preview" class="list-group-item list-group-item-action bg-secondary">Live Blog</a>
@@ -100,11 +101,89 @@
         </div>
       </nav>
 
-      <div class="container-fluid" id="conn">
+      <div class="container-fluid" id="">
+        <strong><div id="ErrBox"></div></strong>
 
-<p>Helloo! am waiting.</p>
+      <table class="table table-hover table-striped" id="up">
+  <!-- Heading of the table -->
+  <tr>
+    <th>No.</th>
+    <th>Post title</th>
+    <th>Author</th>
+    <th>Date created</th>
+    <th>Action</th>
+    <th>Details</th>
+  </tr>
+
+  <!--php code that retrieve all Admins from the database-->
+  <?php 
+    global $conn;
+    $sel =  "SELECT * FROM admin_reg INNER JOIN post ON admin_reg.admin_id = post.sender_id";
+    $qry = mysqli_query($conn, $sel);
+
+    // retrieve each row in the database
+    while ($row = mysqli_fetch_array($qry)) {
+      $id = $row['post_id'];
+      $username = $row['username'];
+      $date = $row['post_time']; 
+      $post_title = $row['post_title'];
+
+   ?>
+
+    <tr>
+      <!-- Displays all the admins table-->
+      <td><?php echo $id ?></td>
+      <td> <?php echo $post_title  ?>  </td>
+      <td><?php echo $username ?> </td>
+      <td> <?php echo $date ?> </td>
+
+      <td> <a href="index.php?delete=<?php echo $id; ?>"> <button class="btn btn-danger">Delete</button></a> <a href="index.php?edit=<?php echo $id; ?>"><button class="btn btn-info">Edit</button></a> </td>
+
+      <td> <a href="../blog.php"> <button class="btn btn-info"> Preview</button></a></td>
+    </tr>
+    
+  <?php } ?>
+</table><!--php code that retrieve all Admins from the database ends here-->
+
+<?php 
+  
+  if (isset($_GET['delete'])) {
+
+    $delete_id = $_GET['delete'];
+    //echo $_GET['id'];
+    $delete = "DELETE FROM post WHERE post_id = '$delete_id'";
+     
+    if (mysqli_query($conn, $delete)) {
+      echo "<script type='text/javascript'>
+      document.getElementById('ErrBox').innerHTML = 'Post has been deleted from the database'
+      window.open('index.php','_self')
+    </script>";
+    }
+
+    else{
+      echo "<script type='text/javascript'>
+      document.getElementById('ErrBox').innerHTML = 'Something went wrong!'
+    </script>";
+    exit();
+    }
+  }
+
+  else{
+    
+}
+ ?>
     
         </div> <!-- contain-fluid ends here -->
+
+        <?php 
+
+          if (isset($_GET['edit'])) {
+
+            //echo $_GET['edit'];
+            include 'edit_post.php';
+
+          }
+         ?>
 
 
 
@@ -137,7 +216,7 @@
   $("#post").click(function(){
      $("").show();
   });
-});*/
+});
 
     // open the admin registration page in the admin home page
     $(document).ready(function(){
@@ -152,7 +231,7 @@ $(document).ready(function(){
     $("#admin").click(function(){
         $(".container-fluid").load("register_admin.php");
     });
-});
+});*/
 
   </script>
 
